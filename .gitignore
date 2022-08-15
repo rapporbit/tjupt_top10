@@ -4,4 +4,4 @@ __pycache__/
 log/
 temp/
 *_local*
-config.json
+config.toml
