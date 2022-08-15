@@ -5,3 +5,4 @@ log/
 temp/
 *_local*
 config.toml
+cache/
