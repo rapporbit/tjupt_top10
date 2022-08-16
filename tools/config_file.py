@@ -68,6 +68,7 @@ class Email(object):
 
         if not self.enable:
             debug(f'未开启邮件服务，取消发送 {title}')
+            info(f'EMAIL: {title} {content}')
             return False
 
         if self.sender is None or not len(self.sender):
@@ -105,6 +106,7 @@ class Email(object):
         else:
             mess = ', '.join(self.receivers)
             info(f'发送成功，给: {mess}')
+            info(f'EMAIL: {title} {content}')
             return True
 
         finally:
