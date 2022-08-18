@@ -113,16 +113,17 @@ class Email(object):
             smtp.quit()
 
 
-class ConfigFile(object):
+class UserConfig(object):
     def __init__(self, file_path: str = CONFIG_PATH) -> None:
         self.path = file_path
 
         self.user: Union[User, None] = None
         self.timer: Union[Timer, None] = None
         self.email: Union[Email, None] = None
-        self.__parser()
 
-    def __parser(self):
+        self.file_parser()
+
+    def file_parser(self):
         '''
         解析.
         '''

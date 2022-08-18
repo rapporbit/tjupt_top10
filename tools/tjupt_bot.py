@@ -7,21 +7,51 @@
 # 版本: 1.0
 
 import pickle
-from os.path import isfile
+from os import makedirs
+from os.path import isdir, isfile
 from typing import Union
 
 import requests
-import retry
 from prettytable import PrettyTable
 from requests.cookies import RequestsCookieJar
+from retry import retry
 
-from tools import debug, error
+from tools import debug, error, info
 
-from .config_file import ConfigFile
+from .config_file import UserConfig
+
+CACHE_FOLDER = './cache'
+
+if not isdir(CACHE_FOLDER):
+    makedirs(CACHE_FOLDER)
+
+DOUBAN_PATH = f'{CACHE_FOLDER}/douban.json'
+COOKIE_PATH = f'{CACHE_FOLDER}/cookie.pkl'
+BASE_URL = 'https://www.tjupt.org/'
+
+file_userconfig = UserConfig()
+
+
+class BotError(Exception):
+    ...
+
+
+class LoginError(BotError):
+    ...
+
+
+class CookiesError(BotError):
+    ...
 
 
 class Bot(object):
-    def __init__(self, base_url: str, douban_path: str, cookie_path: str, config: ConfigFile) -> None:
+    def __init__(
+        self,
+        config: UserConfig = file_userconfig,
+        douban_path: str = DOUBAN_PATH,
+        base_url: str = BASE_URL,
+        cookie_path: str = COOKIE_PATH
+    ) -> None:
         '''
         一天创建一个新的.
         '''
@@ -29,6 +59,9 @@ class Bot(object):
         self.douban_path = douban_path
         self.cookie_path = cookie_path
         self.config = config
+
+        self.cookies: Union[RequestsCookieJar, None] = None
+        self.data: Union[dict, None] = None
 
         self.session = requests.Session()
         self.session.headers.update({
@@ -38,7 +71,7 @@ class Bot(object):
 
         self.table = PrettyTable(['目标', '时间', '签到', 'TOP10'])
 
-    def __load_cookies(self) -> RequestsCookieJar:
+    def load_cookies(self) -> RequestsCookieJar:
         '''
         读取本地的cookies.
         '''
@@ -56,3 +89,46 @@ class Bot(object):
             return cookies
         else:
             return RequestsCookieJar()
+
+    @retry(tries=5, exceptions=(LoginError, CookiesError))
+    def login_and_get_cookies(self):
+        '''登陆'''
+        userid = self.config.user.id
+        userpwd = self.config.user.pwd
+
+        try:
+            self.session.get(f'{self.base_url}login.php')
+            res = self.session.post(f'{self.base_url}takelogin.php', {
+                'username': userid,
+                'password': userpwd
+            })
+        except Exception as e:
+            raise LoginError(f'登陆失败(网页访问失败), 错误: {e}')
+
+        if 'logout.php' in res.text:
+            info(f'登陆成功：{userid}')
+            try:
+                with open(self.cookie_path, 'wb') as fr:
+                    pickle.dump(self.session.cookies, fr)
+                info(f'保存cookies成功: {self.cookie_path}')
+            except Exception as e:
+                self.session.cookies.clear()
+                raise CookiesError(f'保存cookies失败: {self.cookie_path}, 错误: {e}')
+        else:
+            self.session.cookies.clear()
+            raise LoginError(f'{userid}登陆失败')
+
+    @retry(tries=2, exceptions=(LoginError, CookiesError))
+    def login_try_cookie(self):
+        '''通过cookie登陆'''
+        self.session.cookies = self.load_cookies()
+        try:
+            res = self.session.get(self.base_url)
+        except:
+            raise LoginError('访问主页失败')
+        if 'logout.php' in res.text:
+            info(f'通过cookies登陆成功: {self.config.user.id}')
+        else:
+            self.login_and_get_cookies()
+            raise LoginError('登陆失败')
+
