@@ -33,7 +33,7 @@ from requests.cookies import RequestsCookieJar
 from requests.utils import requote_uri
 from retry import retry
 
-from tools import debug, error, info, warn
+from tools import debug, error, info
 
 from .config_file import UserConfig
 
@@ -72,6 +72,9 @@ class DoubanIdNotFoundError(DoubanError):
 class AutoOnceError(BotError):
     ...
 
+
+class TooLateError(BotError):
+    ...
 
 # class AutoError(BotError):
 #     ...
@@ -224,10 +227,10 @@ class Bot(object):
             raise DoubanIdNotFoundError(
                 f'从网页获取豆瓣数据失败: {title}, 原因: {e}, status_code: {res.status_code}')
 
-    def auto_attendance(self, target_time: time.struct_time, p_t: float = 0.01):
+    def attendance_once(self, target_time: Union[float, None], p_t: float = 0.01):
         '''
         签到, 推荐提前至少7秒执行，但也别太早，防止过期
-        :param target_time: 签到时间.
+        :param target_time: 签到时间戳.
         :param  p_t: 为了平衡网络延迟设置的提前量.
         '''
         try:
@@ -281,12 +284,13 @@ class Bot(object):
             }
 
             # 在此定时！
-            spend = time.mktime(target_time) - time.time() - p_t
-            # spend = spend - p_t
-            if spend < 0:
-                raise AutoOnceError('太晚了！很可能不是TOP10了')
-            else:
-                time.sleep(spend)
+            if target_time is not None:
+                spend = target_time - time.time() - p_t
+
+                if spend < 0:
+                    raise TooLateError('太晚了！很可能不是TOP10了')
+                else:
+                    time.sleep(spend)
 
             response = self.session.post(
                 f"{self.base_url}attendance.php", data)
@@ -298,3 +302,33 @@ class Bot(object):
 
         except Exception as e:
             raise AutoOnceError(f'签到时错误: {e}')
+
+
+    def last_att(self):
+        '''
+        确保签到成功.
+        '''
+        try_times = 5
+
+        
+        while 1:
+            try_times -= 1
+            if try_times <= 0:
+                break
+            try:
+                self.attendance_once(None)
+                return
+            except AutoOnceError as e1:
+                debug(f'此次签到失败，继续尝试 {try_times}')
+                # continue
+            except Exception as e2:
+                error(f'未处理错误: {e2}')
+                # continue
+        else:
+            error(f'签到失败，尝试邮件通知!')
+            self.config.email.send_email(
+                'TJUPT_Bot 通知', 
+                '签到失败，请手动签到!'
+            )
+
+        
