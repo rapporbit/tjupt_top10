@@ -65,6 +65,15 @@ def main():
             id='day',
             name='day'
         )
+        scheduler.add_job(
+            bot.tomorrow,
+            CronTrigger(
+                hour=23,
+                minute=30
+            ),
+            id='tomorrow',
+            name='tomorrow'
+        )
         scheduler.start()
 
         while 1:

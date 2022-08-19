@@ -13,7 +13,7 @@ import re
 import time
 from os import makedirs
 from os.path import isdir, isfile
-from typing import Union, List
+from typing import List, Union
 
 import requests
 from bs4 import BeautifulSoup
@@ -361,7 +361,6 @@ class Bot(object):
             self.last_att()
 
     def tomorrow(self):
-
         self.last_att()
         self.att_status = False
         self.login_status = False

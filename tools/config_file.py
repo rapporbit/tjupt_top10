@@ -8,12 +8,15 @@
 
 from email.header import Header
 from email.mime.text import MIMEText
+from os.path import isfile
 from smtplib import SMTP_SSL
 from typing import List, Union
 
 import toml
 
 from tools import debug, error, info, warn
+
+from .config_default import DEFAULT_CONFIG
 
 
 class ConfigParserError(Exception):
@@ -22,6 +25,20 @@ class ConfigParserError(Exception):
 
 CONFIG_PATH = './config.toml'
 
+
+def check_config_file(path: str = CONFIG_PATH):
+    if isfile(path):
+        with open(path, 'r', encoding='utf-8') as fr:
+            con = fr.read().strip()
+        if con == DEFAULT_CONFIG:
+            error(f'请按照提示，修改: {CONFIG_PATH}')
+            return False
+        else:
+            return True
+    else:
+        with open(path, 'w', encoding='utf-8') as fr:
+            fr.write(DEFAULT_CONFIG)
+            return False
 
 class User(object):
     ID = 'id'
@@ -117,6 +134,10 @@ class Email(object):
 
 class UserConfig(object):
     def __init__(self, file_path: str = CONFIG_PATH) -> None:
+        if not check_config_file(file_path):
+            raise ConfigParserError('无有效配置文件')
+
+
         self.path = file_path
 
         self.user: Union[User, None] = None
