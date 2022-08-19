@@ -31,7 +31,7 @@ __conhandler = logging.StreamHandler()
 __conhandler.setLevel(logging.DEBUG)
 # 文件
 __filehandler = RotatingFileHandler(
-    filename=__log_path, backupCount=10, encoding='utf-8', mode='a+', maxBytes=1*MB)
+    filename=__log_path, backupCount=10, encoding='utf-8', mode='a+', maxBytes=0.1*MB)
 __filehandler.setLevel(logging.INFO)
 
 # 格式化器

@@ -40,6 +40,7 @@ def check_config_file(path: str = CONFIG_PATH):
             fr.write(DEFAULT_CONFIG)
             return False
 
+
 class User(object):
     ID = 'id'
     PWD = 'pwd'
@@ -136,7 +137,6 @@ class UserConfig(object):
     def __init__(self, file_path: str = CONFIG_PATH) -> None:
         if not check_config_file(file_path):
             raise ConfigParserError('无有效配置文件')
-
 
         self.path = file_path
 
