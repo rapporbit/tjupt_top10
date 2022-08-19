@@ -33,7 +33,7 @@ from requests.cookies import RequestsCookieJar
 from requests.utils import requote_uri
 from retry import retry
 
-from tools import debug, error, info
+from tools import debug, error, info, warn
 
 from .config_file import UserConfig
 
@@ -303,32 +303,35 @@ class Bot(object):
         except Exception as e:
             raise AutoOnceError(f'签到时错误: {e}')
 
-
     def last_att(self):
         '''
         确保签到成功.
         '''
         try_times = 5
 
-        
         while 1:
             try_times -= 1
             if try_times <= 0:
-                break
+                error(f'签到失败，尝试邮件通知!')
+                self.config.email.send_email(
+                    'TJUPT_Bot 通知',
+                    '签到失败，请手动签到!'
+                )
+                return
             try:
                 self.attendance_once(None)
                 return
             except AutoOnceError as e1:
-                debug(f'此次签到失败，继续尝试 {try_times}')
+                warn(f'此次签到失败 {e1}，继续尝试 {try_times}')
                 # continue
             except Exception as e2:
                 error(f'未处理错误: {e2}')
                 # continue
-        else:
-            error(f'签到失败，尝试邮件通知!')
-            self.config.email.send_email(
-                'TJUPT_Bot 通知', 
-                '签到失败，请手动签到!'
-            )
 
+    def auto_att(self):
+        '''
+        根据调用时候的时间，来选择签到.
+        '''
+        _t = time.time()
+        # 解析选择的时间点
         
