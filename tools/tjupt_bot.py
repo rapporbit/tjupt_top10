@@ -6,17 +6,6 @@
 # 作者: Azure
 # 版本: 1.0
 
-# 大部分代码[参考/直接使用]自 原版:https://github.com/Xzonn/TjuptAutoAttendance
-# 原版最好的功能是可以用 GitHub Action 来自动完成，但是稳定性欠佳，速度也有优化空间，同时也没有失败提醒
-
-# 此版本缺少了对 GitHub Action 的支持，只能本地使用
-# 「因为众所周知的原因GitHub连接有点费事，并且用 GitHub Action 比较难优化速度」
-# 但是原版确实很方便，如果你并不需要较高的稳定性（连续签到 & 手动检查），或等其作者更新，也是非常推荐
-
-# 此版本增加了失败时邮件通知（推荐使用QQ邮箱，亲测icloud邮箱延迟太高）
-# 思路：提前获取签到页面及答案，等到预定时间提交答案，来最大化答题速度，考虑到延迟，可以手动指定提前多久
-# [注意]: 指定提前量时，必须选择 00:00 时间点，否则可能是当天的最后一个!
-
 import json
 import pickle
 import random
@@ -86,7 +75,7 @@ class Bot(object):
         cookie_path: str = COOKIE_PATH
     ) -> None:
         '''
-        一天创建一个新的.
+        bot.
         '''
         self.base_url = base_url
         self.douban_path = douban_path
