@@ -345,11 +345,10 @@ class Bot(object):
 
             item = time.strftime(
                 f'%Y-%m-%d {item[0]}:{item[1]}:00', time.localtime())
-            
+
             # debug(f'设置的时间点: {item}')
             item = time.mktime(time.strptime(item, r'%Y-%m-%d %H:%M:%S'))
             ava_times.append(item)
-
 
         ava_times.sort()
 
@@ -373,4 +372,4 @@ class Bot(object):
     def tomorrow(self):
         self.att_status = False
         self.login_status = False
-        
+        self.last_att()
