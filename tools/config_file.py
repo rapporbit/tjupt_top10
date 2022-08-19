@@ -34,10 +34,12 @@ class User(object):
 
 class Timer(object):
     POINTS_IN_TIME = 'points_in_time'
+    P_T = 'p_t'
     DEAD_LINE = 'dead_line'
 
     def __init__(self) -> None:
         self.points_in_time: Union[List[str], None] = None
+        self.p_t: Union[float, None] = None
         self.dead_line: Union[str, None] = None
 
 
@@ -139,6 +141,7 @@ class UserConfig(object):
             self.timer = Timer()
             self.timer.points_in_time = content.get(
                 'timer').get(Timer.POINTS_IN_TIME)
+            self.timer.p_t = float(content.get('timer').get(Timer.P_T))
             self.timer.dead_line = content.get('timer').get(Timer.DEAD_LINE)
 
             self.email = Email()

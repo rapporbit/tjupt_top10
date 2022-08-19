@@ -24,7 +24,7 @@ import re
 import time
 from os import makedirs
 from os.path import isdir, isfile
-from typing import Union
+from typing import Union, List
 
 import requests
 from bs4 import BeautifulSoup
@@ -76,9 +76,6 @@ class AutoOnceError(BotError):
 class TooLateError(BotError):
     ...
 
-# class AutoError(BotError):
-#     ...
-
 
 class Bot(object):
     def __init__(
@@ -99,7 +96,8 @@ class Bot(object):
         self.cookies: Union[RequestsCookieJar, None] = None
         self.data: Union[dict, None] = None
         # 登陆状态
-        self.status = False
+        self.login_status = False
+        self.att_status = False
         self.session = requests.Session()
         self.session.headers.update({
             "User-Agent":
@@ -144,7 +142,7 @@ class Bot(object):
 
         if 'logout.php' in res.text:
             info(f'登陆成功：{userid}')
-            self.status = True
+            self.login_status = True
             try:
                 with open(self.cookie_path, 'wb') as fr:
                     pickle.dump(self.session.cookies, fr)
@@ -160,7 +158,7 @@ class Bot(object):
     def login_try_cookie(self):
         '''通过cookie登陆'''
         # 先检查登陆状态
-        if self.status:
+        if self.login_status:
             return
         # 先读取cookies
         self.session.cookies = self.load_cookies()
@@ -171,7 +169,7 @@ class Bot(object):
             raise LoginError('访问主页失败，请检查网络')
 
         if 'logout.php' in res.text:
-            self.status = True
+            self.login_status = True
             info(f'通过cookies登陆成功: {self.config.user.id}')
         else:
             self.login_and_get_cookies()
@@ -244,6 +242,7 @@ class Bot(object):
 
             if '今日已签到' in text:
                 info(f'今日已签到: {self.config.user.id}')
+                self.att_status = True
                 return
 
             tree = BeautifulSoup(text, "html.parser")
@@ -296,6 +295,7 @@ class Bot(object):
                 f"{self.base_url}attendance.php", data)
             if "签到成功" in response.text:
                 info(f'签到成功: {self.config.user.id}')
+                self.att_status = True
                 return
             else:
                 raise AutoOnceError('未发现"签到成功"')
@@ -328,10 +328,49 @@ class Bot(object):
                 error(f'未处理错误: {e2}')
                 # continue
 
-    def auto_att(self):
+    def auto_att_oneday(self):
         '''
-        根据调用时候的时间，来选择签到.
+        根据调用时候的时间，来选择签到.(提前一段时间调用，1min左右)\n
+        每过一天，那么记得重置一下att_status.
         '''
+        if self.att_status:
+            return
         _t = time.time()
         # 解析选择的时间点
+        ava_times: List[float] = []
+
+        for item in self.config.timer.points_in_time:
+            item = item.strip()
+            item = item.split(':', 1)
+
+            item = time.strftime(
+                f'%Y-%m-%d {item[0]}:{item[1]}:00', time.localtime())
+            
+            # debug(f'设置的时间点: {item}')
+            item = time.mktime(time.strptime(item, r'%Y-%m-%d %H:%M:%S'))
+            ava_times.append(item)
+
+
+        ava_times.sort()
+
+        # 找到目标时间点
+        for i in range(len(ava_times)):
+            if _t >= ava_times[i]:
+                continue
+            else:
+                temp_time_s = time.strftime(
+                    r'%Y-%m-%d %H:%M:%S', time.localtime(ava_times[i]))
+                debug(f'找到: {temp_time_s}')
+                try:
+                    self.attendance_once(ava_times[i], self.config.timer.p_t)
+                except Exception as e:
+                    error(f'此次尝试签到失败: {e}')
+                break
+        else:
+            warn(f'未找到对应的时间点，强制签到.')
+            self.last_att()
+
+    def tomorrow(self):
+        self.att_status = False
+        self.login_status = False
         
