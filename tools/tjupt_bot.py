@@ -307,6 +307,8 @@ class Bot(object):
         '''
         确保签到成功.
         '''
+        self.att_status = False
+        self.login_status = False
         try_times = 5
 
         while 1:
@@ -370,6 +372,7 @@ class Bot(object):
             self.last_att()
 
     def tomorrow(self):
+
+        self.last_att()
         self.att_status = False
         self.login_status = False
-        self.last_att()
