@@ -47,7 +47,7 @@ def main():
             hour=dead_line[0],
             minute=dead_line[1]
         )
-        debug(f'dead line: {dead_line}')
+        debug(f'最后的时间: {dead_line}')
         trs_ = OrTrigger(trs)
         # debug(trs_)
         if not len(trs):
