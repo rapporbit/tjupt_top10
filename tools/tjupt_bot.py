@@ -188,8 +188,8 @@ class Bot(object):
 
     def get_id(self, title: str) -> str:
         '''获取ID'''
-        if self.data is None or not len(self.data):
-            raise DoubanIdNotFoundError('无豆瓣数据')
+        if self.data is None:
+            self.data = {}
 
         if title in self.data:
             return self.data[title]
@@ -364,3 +364,9 @@ class Bot(object):
         self.last_att()
         self.att_status = False
         self.login_status = False
+        # 缓存别太多
+        self.load_douban_data()
+        if len(self.data) >= 200:
+            self.data = {}
+            self.save_douban_data()
+            info(f'清理豆瓣数据缓存: {self.douban_path}')
