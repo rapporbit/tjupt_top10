@@ -250,7 +250,8 @@ class Bot(object):
                 value = value.replace("&amp;", "&")
                 try:
                     url_id = self.get_id(title)
-                except:
+                except Exception as e:
+                    warn(f'获取ID时错误：{e}')
                     continue
                 if captcha_image_id == url_id:
                     available_choices.append({
