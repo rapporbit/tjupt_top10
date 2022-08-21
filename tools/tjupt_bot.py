@@ -212,7 +212,7 @@ class Bot(object):
             return url_id
         except Exception as e:
             raise DoubanIdNotFoundError(
-                f'从网页获取豆瓣数据失败: {title}, 原因: {e}, status_code: {res.status_code}')
+                f'从网页获取豆瓣数据失败: {title}, 原因: {e}, 返回内容: {res.text}')
 
     def attendance_once(self, target_time: Union[float, None], p_t: float = 0.01):
         '''
@@ -248,7 +248,10 @@ class Bot(object):
             for value, id, title in captcha_options:
                 value = str(value)
                 value = value.replace("&amp;", "&")
-                url_id = self.get_id(title)
+                try:
+                    url_id = self.get_id(title)
+                except:
+                    continue
                 if captcha_image_id == url_id:
                     available_choices.append({
                         "value": value,
@@ -258,12 +261,13 @@ class Bot(object):
                         "captcha_image": captcha_image,
                     })
 
-                    if not len(available_choices):
-                        raise AutoOnceError('无可选的')
-
                     debug(
                         f"可选: {json.dumps(available_choices[-1], ensure_ascii=False)}")
 
+            if not len(available_choices):
+                raise AutoOnceError('无可选的')
+            else:
+                debug(f'可选的: {available_choices}')
             self.save_douban_data()
 
             data = {
