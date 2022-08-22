@@ -26,16 +26,17 @@
 -   提前获取签到页面及答案，等到预定时间提交答案，来最大化答题速度，考虑到延迟，可以手动指定提前多久
 
 
-#### 安装教程
+#### 配置
 
-1.  安装依赖: `pip install -r requirements.txt`
-2.  按照 `./config_demo.toml` 的示例填写 [示例配置](https://gitee.com/threemoredays/tjupt_qiandao_top10/blob/master/config_demo.toml)
+1.  按照 `./config_demo.toml` 的示例填写 [示例配置](https://gitee.com/threemoredays/tjupt_qiandao_top10/blob/master/config_demo.toml)
+2.  配置 `./config_demo.toml` 填写完成后，重命名为: `./config.toml`
+3.  邮箱部分 *如果打开了* 参数请参考: [QQ_SMTP_授权码](https://service.mail.qq.com/cgi-bin/help?subtype=1&&no=1001256&&id=28)
 
 
 #### 通过源码运行
 
-1.  运行 `python ./bot.py`
-2.  邮箱部分 *如果打开了* 参数请参考: [QQ_SMTP_授权码](https://service.mail.qq.com/cgi-bin/help?subtype=1&&no=1001256&&id=28)
+1.  安装依赖: `pip install -r ./requirements.txt`
+2.  运行 `python ./bot.py`
 
 
 #### 使用发行版(只适用于Windows_x86_64) 「推荐」
