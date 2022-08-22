@@ -6,3 +6,6 @@ temp/
 *_local*
 config.toml
 cache/
+*.spec
+build/
+dist/
