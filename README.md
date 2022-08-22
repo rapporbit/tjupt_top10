@@ -38,7 +38,7 @@
 2.  邮箱部分 *如果打开了* 参数请参考: [QQ_SMTP_授权码](https://service.mail.qq.com/cgi-bin/help?subtype=1&&no=1001256&&id=28)
 
 
-#### 使用发行版(只适用于Windows_x86_64)「推荐」
+#### 使用发行版(只适用于Windows_x86_64) **推荐**
 
 1.  下载最新的发行版 [发行版](https://gitee.com/threemoredays/tjupt_qiandao_top10/releases)
 2.  阅读发行版附带的 `README` 文件
