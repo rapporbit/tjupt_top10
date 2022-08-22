@@ -27,7 +27,7 @@
 #### 安装教程
 
 1.  安装依赖: `pip install -r requirements.txt`
-2.  按照 `./config.toml` 的示例填写
+2.  按照 `./config_demo.toml` 的示例填写 [示例配置](https://gitee.com/threemoredays/tjupt_qiandao_top10/blob/master/config_demo.toml)
 
 
 #### 通过源码运行
