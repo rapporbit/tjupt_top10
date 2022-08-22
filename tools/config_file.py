@@ -9,7 +9,7 @@
 from email.header import Header
 from email.mime.text import MIMEText
 from os.path import isfile
-from smtplib import SMTP_SSL
+from smtplib import SMTP, SMTP_SSL
 from typing import List, Union
 
 import toml
@@ -130,7 +130,10 @@ class Email(object):
             return True
 
         finally:
-            smtp.quit()
+            try:
+                smtp.quit()
+            except:
+                pass
 
 
 class UserConfig(object):
