@@ -1,5 +1,6 @@
 # tjupt_qiandao_top10
 
+
 #### 介绍
 -   TJUPT 努力TOP10
 
@@ -12,7 +13,6 @@
 -   此版本缺少了对 GitHub Action 的支持，只能本地使用
 -   因为众所周知的原因GitHub连接有点费事，并且用 GitHub Action 比较难优化速度
 -   但是原版确实很方便，如果你并不需要较高的稳定性（连续签到 & 手动检查），或等其作者更新，也是非常推荐
-
 
 
 #### 软件架构
@@ -29,10 +29,18 @@
 1.  安装依赖: `pip install -r requirements.txt`
 2.  按照 `./config.toml` 的示例填写
 
-#### 使用说明
+
+#### 通过源码运行
 
 1.  运行 `python ./bot.py`
-2.  邮箱部分 *如果打开了* 参数请参考: [qq smtp](https://service.mail.qq.com/cgi-bin/help?subtype=1&&id=28&&no=166)
+2.  邮箱部分 *如果打开了* 参数请参考: [QQ_SMTP_授权码](https://service.mail.qq.com/cgi-bin/help?subtype=1&&no=1001256&&id=28)
+
+
+#### 使用发行版
+
+1.  下载最新的发行版 [发行版](https://gitee.com/threemoredays/tjupt_qiandao_top10/releases)
+2.  阅读发行版附带的 `README` 文件
+3.  使用 `bot.exe` 运行
 
 #### 参与贡献
 
