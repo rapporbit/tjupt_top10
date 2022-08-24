@@ -41,7 +41,7 @@
 
 #### 使用发行版(只适用于Windows_x86_64) 「推荐」
 
-1.  下载最新的发行版 [发行版](https://gitee.com/threemoredays/tjupt_qiandao_top10/releases)
+1.  下载最新的 [发行版](https://gitee.com/threemoredays/tjupt_qiandao_top10/releases)
 2.  阅读发行版附带的 `README` 文件
 3.  使用 `bot.exe` 运行
 
