@@ -228,7 +228,7 @@ class Bot(object):
             if 'login.php' in response.text:
                 # debug(f'未登陆')
                 self.login_try_cookie()
-                # response = self.session.get(f"{self.base_url}attendance.php")
+                response = self.session.get(f"{self.base_url}attendance.php")
 
             text = response.text
 
@@ -326,6 +326,7 @@ class Bot(object):
             except AutoOnceError as e1:
                 warn(f'此次签到失败 {e1}，继续尝试 {try_times}')
                 # continue
+                # raise e1
             except Exception as e2:
                 error(f'未处理错误: {e2}')
                 # continue
