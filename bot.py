@@ -14,6 +14,7 @@ from apscheduler.triggers.cron import CronTrigger
 
 from tools import debug, error
 from tools.tjupt_bot import Bot
+from version import hello
 
 
 def main():
@@ -88,4 +89,5 @@ def main():
 
 
 if __name__ == '__main__':
+    hello()
     main()
