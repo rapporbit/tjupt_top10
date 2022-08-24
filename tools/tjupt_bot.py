@@ -61,6 +61,8 @@ class DoubanIdNotFoundError(DoubanError):
 class AutoOnceError(BotError):
     ...
 
+class NoChoiceError(BotError):
+    ...
 
 class TooLateError(BotError):
     ...
@@ -214,6 +216,7 @@ class Bot(object):
             raise DoubanIdNotFoundError(
                 f'从网页获取豆瓣数据失败: {title}, 原因: {e}, 返回内容: {res.text}')
 
+    @retry(tries=5, exceptions=(NoChoiceError))
     def attendance_once(self, target_time: Union[float, None], p_t: float = 0.01):
         '''
         签到, 推荐提前至少7秒执行，但也别太早，防止过期
@@ -225,7 +228,7 @@ class Bot(object):
             if 'login.php' in response.text:
                 # debug(f'未登陆')
                 self.login_try_cookie()
-                response = self.session.get(f"{self.base_url}attendance.php")
+                # response = self.session.get(f"{self.base_url}attendance.php")
 
             text = response.text
 
@@ -266,7 +269,7 @@ class Bot(object):
                         f"可选: {json.dumps(available_choices[-1], ensure_ascii=False)}")
 
             if not len(available_choices):
-                raise AutoOnceError('无可选的')
+                raise NoChoiceError('无可选的')
             else:
                 debug(f'可选的: {available_choices}')
             self.save_douban_data()
@@ -294,6 +297,9 @@ class Bot(object):
             else:
                 raise AutoOnceError('未发现"签到成功"')
 
+        except NoChoiceError as e:
+            debug(f'无可选的，重试, {e}')
+            raise e
         except Exception as e:
             raise AutoOnceError(f'签到时错误: {e}')
 
