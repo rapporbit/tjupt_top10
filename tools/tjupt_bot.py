@@ -61,8 +61,10 @@ class DoubanIdNotFoundError(DoubanError):
 class AutoOnceError(BotError):
     ...
 
+
 class NoChoiceError(BotError):
     ...
+
 
 class TooLateError(BotError):
     ...
@@ -303,7 +305,7 @@ class Bot(object):
         except Exception as e:
             raise AutoOnceError(f'签到时错误: {e}')
 
-    def last_att(self):
+    def last_att(self, is_test: bool = False):
         '''
         确保签到成功.
         '''
@@ -314,11 +316,12 @@ class Bot(object):
         while 1:
             try_times -= 1
             if try_times <= 0:
-                error(f'签到失败，尝试邮件通知!')
-                self.config.email.send_email(
-                    'TJUPT_Bot 通知',
-                    '签到失败，请手动签到!'
-                )
+                if not is_test:
+                    error(f'签到失败，尝试邮件通知!')
+                    self.config.email.send_email(
+                        'TJUPT_Bot 通知',
+                        '签到失败，请手动签到!'
+                    )
                 return
             try:
                 self.attendance_once(None)
