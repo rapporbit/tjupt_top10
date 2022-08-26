@@ -7,6 +7,9 @@
 # 版本: 1.0
 
 from tools.tjupt_bot import Bot
+from version import hello
+
+hello()
 
 bot = Bot()
 
