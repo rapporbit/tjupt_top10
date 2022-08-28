@@ -9,3 +9,4 @@ cache/
 *.spec
 build/
 dist/
+pybuilder.exe
