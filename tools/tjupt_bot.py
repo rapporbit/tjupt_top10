@@ -381,7 +381,7 @@ class Bot(object):
         self.login_status = False
         # 缓存别太多
         self.load_douban_data()
-        if len(self.data) >= 200:
+        if len(self.data) >= 500:
             self.data = {}
             self.save_douban_data()
             info(f'清理豆瓣数据缓存: {self.douban_path}')
