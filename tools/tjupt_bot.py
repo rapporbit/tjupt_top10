@@ -216,7 +216,7 @@ class Bot(object):
             return url_id
         except Exception as e:
             raise DoubanIdNotFoundError(
-                f'从网页获取豆瓣数据失败: {title}, 原因: {e}, 返回内容: {res.text}')
+                f'数据失败: {title}')
 
     @retry(tries=5, exceptions=(NoChoiceError))
     def attendance_once(self, target_time: Union[float, None], p_t: float = 0.01):
@@ -256,7 +256,7 @@ class Bot(object):
                 try:
                     url_id = self.get_id(title)
                 except Exception as e:
-                    warn(f'获取ID时错误：{e}')
+                    debug(f'获取ID时错误：{e}')
                     continue
                 if captcha_image_id == url_id:
                     available_choices.append({
@@ -286,7 +286,7 @@ class Bot(object):
                 spend = target_time - time.time() - p_t
 
                 if spend < 0:
-                    raise TooLateError('太晚了！很可能不是TOP10了')
+                    raise TooLateError('太晚了')
                 else:
                     time.sleep(spend)
 
