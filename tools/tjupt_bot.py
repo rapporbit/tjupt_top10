@@ -385,3 +385,13 @@ class Bot(object):
             self.data = {}
             self.save_douban_data()
             info(f'清理豆瓣数据缓存: {self.douban_path}')
+
+    def check_top_10(self):
+        '''
+        检查是否是top10.
+        '''
+        # 每日0、6、7、8、12、18、20、22点签到各前 10 名，下次连续签到时，获得的魔力值将 翻倍
+        # https://tjupt.org/topten.php?type=7&all=1&subtype=today_attend&page=0
+
+        pass
+    
