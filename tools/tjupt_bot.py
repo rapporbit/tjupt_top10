@@ -235,7 +235,7 @@ class Bot(object):
             text = response.text
 
             if '今日已签到' in text:
-                info(f'今日已签到: {self.config.user.id}')
+                debug(f'今日已签到: {self.config.user.id}')
                 self.att_status = True
                 return
 
