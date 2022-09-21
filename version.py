@@ -10,7 +10,7 @@ class Version(object):
     # 版本号，如果带有beta字符则为测试版
     VERSION = '0.2.2'
     # 发布日期 年-月-日
-    RELEASE = '2022-09-04'
+    RELEASE = '2022-09-21'
 
     # 横幅
     BANNER = r"""
