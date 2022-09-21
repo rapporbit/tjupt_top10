@@ -30,7 +30,7 @@
 
 #### 配置
 
-1.  按照 `./config_demo.toml` 的示例填写 [示例配置](https://gitee.com/threemoredays/tjupt_qiandao_top10/blob/master/config_demo.toml)
+1.  按照 `./config_demo.toml` 的示例填写 [示例配置](https://github.com/azureqaq/tjupt_top10/blob/master/config_demo.toml)
 2.  配置 `./config_demo.toml` 填写完成后，重命名为: `./config.toml`
 3.  邮箱部分 *如果打开了* 参数请参考: [QQ_SMTP_授权码](https://service.mail.qq.com/cgi-bin/help?subtype=1&&no=1001256&&id=28)
 
@@ -43,7 +43,7 @@
 
 #### 使用发行版(只适用于Windows_x86_64) 「推荐」
 
-1.  下载最新的 [发行版](https://gitee.com/threemoredays/tjupt_qiandao_top10/releases)
+1.  下载最新的 [发行版](https://github.com/azureqaq/tjupt_top10/releases)
 2.  阅读发行版附带的 `README` 文件
 3.  使用 `bot.exe` 运行
 
