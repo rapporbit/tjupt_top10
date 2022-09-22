@@ -19,7 +19,7 @@
 -   python@3.9
 
 #### 效果
--   这几日的效果: ![res](/assets/img/res.png "res")
+-   这几日的[效果](/assets/img/res.png)
 
 #### 运行逻辑 & 注意事项
 
