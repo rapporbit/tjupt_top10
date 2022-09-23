@@ -1,5 +1,6 @@
 # tjupt_qiandao_top10
 
+#### 已经被BAN 「2022-09-23」
 
 #### 介绍
 -   TJUPT 努力TOP10
